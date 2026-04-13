@@ -1,0 +1,111 @@
+import java.io.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+public class PlantList {
+    private List<Plant> plants;
+
+    public PlantList(){
+        this.plants = new ArrayList<>();
+    }
+
+    // -- komparator pro razeni podle posledni zalivky --
+    public static final Comparator<Plant> BY_WATERING_DATE = Comparator.comparing(Plant::getWatering);
+
+    // -- metody razeni --
+
+    //  vychozi razeni podle nazvu
+    public void sortByName(){
+        plants.sort(null); // pouzije Plant.comparableTo()
+    }
+
+    // razeni podle data posledni zalivky
+    public void sortByWateringDate(){
+        plants.sort(BY_WATERING_DATE);
+    }
+
+    // (1) pridani nove rostliny do seznamu
+    public void addPlant(Plant plant){
+        plants.add(plant);
+    }
+
+    // (2) ziskani rostliny na zadanem indexu
+    public Plant getPlant(int idx){
+        return plants.get(idx);
+    }
+
+    // (3) odebrani rostliny ze seznamu
+    public void removePlant(int idx){
+        plants.remove(idx);
+    }
+
+    // (4) vytvoreni kopie seznamu rostlin
+
+    public List<Plant> getPlantCopy() {
+        return new ArrayList<>(plants);
+    }
+
+    // (5) seznam rostlin, ktere je potreba zalit
+    public List<Plant> getPlantsToWater(){
+        List<Plant> result = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+
+        for (Plant p : plants){
+            LocalDate nextWatering = p.getWatering().plusDays(p.getFrequencyOfWatering());
+
+            if (nextWatering.isBefore(today)){
+                result.add(p);
+            }
+        }
+
+        return result;
+    }
+
+    // ----------------------
+    // export do souboru
+    // ----------------------
+
+    public void exportToFile(String filename) throws IOException{
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))){
+            for (Plant p : plants) {
+                writer.write(
+                        p.getName()+";"+
+                            p.getNotes()+";"+
+                            p.getPlanted()+";"+
+                            p.getWatering()+";"+
+                            p.getFrequencyOfWatering()
+                );
+                writer.newLine();
+            }
+        }
+    }
+
+    // ----------------------
+    // import ze souboru
+    // ----------------------
+    public void importFromFile(String filename) throws IOException, PlantException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))){
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(";");
+
+                if (parts.length != 5) {
+                    throw new IOException("Chybny format radku: "+line);
+                }
+
+                String name = parts[0];
+                String notes = parts[1];
+                LocalDate planted = LocalDate.parse(parts[2]);
+                LocalDate watering = LocalDate.parse(parts[3]);
+                int frequency = Integer.parseInt(parts[4]);
+
+                Plant plant = new Plant(name,notes,planted,watering,frequency);
+                plants.add(plant);
+            }
+        }
+    }
+
+}
