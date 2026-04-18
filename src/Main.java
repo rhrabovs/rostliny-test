@@ -64,7 +64,7 @@ public class Main {
 
         System.out.println();
 
-        // (3) pridani kmvetiny
+        // (3) pridani kvetiny
         try {
             String jmenoKytky = "Monstera";
             //Plant novaKytka = new Plant(jmenoKytky, "Velka listova rostlina", LocalDate.now().minusDays(30),
