@@ -62,7 +62,7 @@ public class PlantList {
 
         return result;
     }
-
+    /**
     // ----------------------
     // export do souboru
     // ----------------------
@@ -105,6 +105,64 @@ public class PlantList {
                 Plant plant = new Plant(name,notes,planted,watering,frequency);
                 plants.add(plant);
             }
+        }
+    }
+    */
+
+    // ulozeni seznamu rostlin do souboru
+    public void saveToFile(String filename, String delimiter) throws IOException{
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))){
+            for (Plant p : plants) {
+                //writer.write(
+                //        p.getName()+ delimiter +
+                //            p.getNotes()+ delimiter +
+                //            p.getPlanted()+ delimiter +
+                //            p.getWatering()+ delimiter +
+                //            p.getFrequencyOfWatering()
+                //);
+                // viz poznamka v konstruktoru
+                writer.write(
+                        p.getName()+ delimiter +
+                                p.getNotes()+ delimiter +
+                                p.getFrequencyOfWatering() + delimiter +
+                                p.getWatering()+ delimiter +
+                                p.getPlanted()+ delimiter
+
+                );
+                writer.newLine();
+            }
+        }
+    }
+
+    // nacteni seznamu rostlin ze souboru
+    public void loadFromFile(String filename, String delimiter) throws IOException, PlantException {
+        plants.clear();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))){
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(delimiter);
+
+                if (parts.length != 5) {
+                    throw new IOException("Chybny format radku: "+ line);
+                }
+
+                String name = parts[0];
+                String notes = parts[1];
+                int frequencyOfWatering = Integer.parseInt(parts[2]); // presunute z konce na 3 pozici, viz poznamka v konstruktoru
+                LocalDate watering = LocalDate.parse(parts[3]);       // proti zadani prehozene watering a planted
+                LocalDate planted = LocalDate.parse(parts[4]);
+
+
+                // muze vyhodit vyjimku PlantException > predame ji dal
+                //Plant plant = new Plant(name, notes, planted, watering, frequencyOfWatering);
+                Plant plant = new Plant(name, notes, frequencyOfWatering,watering, planted); // viz poznamka v konstruktoru
+                plants.add(plant);
+            }
+        } catch (Exception e) {
+            System.out.println("Chyba pri nacitani souboru:\n" + e.getMessage());
+            plants.clear(); // ponechame prazdny seznam
         }
     }
 
