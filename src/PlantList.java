@@ -62,52 +62,6 @@ public class PlantList {
 
         return result;
     }
-    /**
-    // ----------------------
-    // export do souboru
-    // ----------------------
-
-    public void exportToFile(String filename) throws IOException{
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))){
-            for (Plant p : plants) {
-                writer.write(
-                        p.getName()+";"+
-                            p.getNotes()+";"+
-                            p.getPlanted()+";"+
-                            p.getWatering()+";"+
-                            p.getFrequencyOfWatering()
-                );
-                writer.newLine();
-            }
-        }
-    }
-
-    // ----------------------
-    // import ze souboru
-    // ----------------------
-    public void importFromFile(String filename) throws IOException, PlantException {
-        try (BufferedReader reader = new BufferedReader(new FileReader(filename))){
-            String line;
-
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(";");
-
-                if (parts.length != 5) {
-                    throw new IOException("Chybny format radku: "+line);
-                }
-
-                String name = parts[0];
-                String notes = parts[1];
-                LocalDate planted = LocalDate.parse(parts[2]);
-                LocalDate watering = LocalDate.parse(parts[3]);
-                int frequency = Integer.parseInt(parts[4]);
-
-                Plant plant = new Plant(name,notes,planted,watering,frequency);
-                plants.add(plant);
-            }
-        }
-    }
-    */
 
     // ulozeni seznamu rostlin do souboru
     public void saveToFile(String filename, String delimiter) throws IOException{
