@@ -12,7 +12,8 @@ public class Plant implements Comparable<Plant> {
      * dat, nez uvadeji v zadani ukolu, to snad ne. A clovek pak muze debuggovat jak
      * debil protoze mu nenacita ani soubor, ktery je spravny!!!!!
      *
-     * Takze musim opravit (prizpusobit) konstruktor tak, aby vyhovoval jejich blbemu souboru
+     * Takze musim opravit (prizpusobit) konstruktor tak, aby vyhovoval jejich souboru,
+     * ale puvodni konstruktor si ponecham, aby bylo videt, ze jsem to delal podle zadani
      */
 
     /**
